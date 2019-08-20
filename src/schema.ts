@@ -6,6 +6,7 @@ import * as path from 'path';
 import Query from "./resolvers/Query";
 
 import {
+  Auth,
   User
 } from "./types/Schema";
 
@@ -16,6 +17,7 @@ const schema = makeSchema({
   types: [
     BlankQuery, // If you don't put this it auto gives you all the prisma queries
     Query,
+    Auth,
     User,
   ],
 
