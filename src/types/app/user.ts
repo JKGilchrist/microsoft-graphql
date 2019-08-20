@@ -7,7 +7,7 @@ const User = objectType({
     t.string("displayName", { description: "User's display name.", nullable: false });
     t.string("givenName", { description: "User's given name.", nullable: true });
     t.string("surname", { description: "User's surname.", nullable: true });
-    t.string("userPrincipalName", { description: "User's principal name.", nullable: true });
+    t.string("userPrincipleName", { description: "User's principle name.", nullable: true });
     t.string("jobTitle", { description: "User's job title.", nullable: true });
     t.string("mail", { description: "User's email address.", nullable: true });
   },

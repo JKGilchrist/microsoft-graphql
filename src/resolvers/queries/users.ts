@@ -27,7 +27,7 @@ const users = extendType( {
             displayName: user.displayName,
             givenName: user.givenName,
             surname: user.surname,
-            userPrincipalName: user.userPrincipalName,
+            userPrincipleName: user.userPrincipleName,
             jobTitle: user.jobTitle,
             mail: user.mail,
           });

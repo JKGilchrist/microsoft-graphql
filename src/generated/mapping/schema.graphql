@@ -41,6 +41,6 @@ type User {
   """User's surname."""
   surname: String
 
-  """User's principal name."""
-  userPrincipalName: String
+  """User's principle name."""
+  userPrincipleName: String
 }
