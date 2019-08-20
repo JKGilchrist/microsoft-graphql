@@ -32,7 +32,7 @@ export interface NexusGenRootTypes {
     jobTitle?: string | null; // String
     mail?: string | null; // String
     surname?: string | null; // String
-    userPrincipleName?: string | null; // String
+    userPrincipalName?: string | null; // String
   }
   String: string;
   Int: number;
@@ -61,7 +61,7 @@ export interface NexusGenFieldTypes {
     jobTitle: string | null; // String
     mail: string | null; // String
     surname: string | null; // String
-    userPrincipleName: string | null; // String
+    userPrincipalName: string | null; // String
   }
 }
 
