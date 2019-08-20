@@ -1,6 +1,7 @@
 require("dotenv").config();
 import { ApolloServer } from 'apollo-server';
 import schema from "./schema";
+import getToken from "./auth";
 
 const env = process.env;
 
