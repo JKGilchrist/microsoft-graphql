@@ -1,4 +1,4 @@
-import { objectType } from "nexus";
+import { objectType, intArg } from "nexus";
 
 const User = objectType({
   name: 'User',

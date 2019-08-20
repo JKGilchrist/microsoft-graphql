@@ -2,24 +2,8 @@
 ### Do not make changes to this file directly
 
 
-type Auth {
-  """
-  The requested access token. Your app can use this token in calls to Microsoft Graph.
-  """
-  access_token: String!
-
-  """How long the access token is valid (in seconds)."""
-  expires_in: Int!
-
-  """
-  Indicates the token type value. The only type that Azure AD supports is bearer.
-  """
-  token_type: String!
-}
-
 type Query {
-  getAuth(client_id: String!, client_secret: String!): Auth!
-  users: [User!]!
+  users(givenNameStartsWith: String): [User!]!
 }
 
 type User {

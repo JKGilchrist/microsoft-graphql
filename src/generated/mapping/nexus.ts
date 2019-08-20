@@ -19,11 +19,6 @@ export interface NexusGenEnums {
 }
 
 export interface NexusGenRootTypes {
-  Auth: { // root type
-    access_token: string; // String!
-    expires_in: number; // Int!
-    token_type: string; // String!
-  }
   Query: {};
   User: { // root type
     displayName: string; // String!
@@ -45,13 +40,7 @@ export interface NexusGenAllTypes extends NexusGenRootTypes {
 }
 
 export interface NexusGenFieldTypes {
-  Auth: { // field return type
-    access_token: string; // String!
-    expires_in: number; // Int!
-    token_type: string; // String!
-  }
   Query: { // field return type
-    getAuth: NexusGenRootTypes['Auth']; // Auth!
     users: NexusGenRootTypes['User'][]; // [User!]!
   }
   User: { // field return type
@@ -67,9 +56,8 @@ export interface NexusGenFieldTypes {
 
 export interface NexusGenArgTypes {
   Query: {
-    getAuth: { // args
-      client_id: string; // String!
-      client_secret: string; // String!
+    users: { // args
+      givenNameStartsWith?: string | null; // String
     }
   }
 }
@@ -79,7 +67,7 @@ export interface NexusGenAbstractResolveReturnTypes {
 
 export interface NexusGenInheritedFields {}
 
-export type NexusGenObjectNames = "Auth" | "Query" | "User";
+export type NexusGenObjectNames = "Query" | "User";
 
 export type NexusGenInputNames = never;
 
