@@ -1,26 +1,17 @@
 require("dotenv").config();
 
-import { ApolloServer } from 'apollo-server';
+import { ApolloServer, gql } from 'apollo-server';
 import schema from "./schema";
-import getToken from "./auth";
 
-const env = process.env;
+const server = new ApolloServer({
+  schema,
+  context: async (req) => ({
+    ...req,
+    access_token: process.env.ACCESS_TOKEN,
+    token_expire_time: null
+  })
+});
 
-
-async function start() {
-  const server = new ApolloServer({
-    schema,
-    context: async (req) => ({
-      ...req,
-      access_token: (await getToken(env.DIRECTORY_ID, env.APP_ID, env.APP_SECRET))['access_token'],
-      token_expire_time: null,
-    })
-  });
-
-  server.listen({ port: 4000 }, () =>
-    console.log(`🚀 Server ready at http://localhost:4000`),
-  );
-}
-
-
-start();
+server.listen({ port: 4000 }, () =>
+  console.log(`🚀 Server ready at http://localhost:4000`),
+)
