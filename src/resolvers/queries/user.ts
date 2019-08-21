@@ -26,9 +26,11 @@ const user = extendType( {
           });
         });
 
-        //get user type, if needed
+
         for (let i = 0; i < info.fieldNodes[0]["selectionSet"]["selections"].length; i++){
-          if  ( info.fieldNodes[0]["selectionSet"]["selections"][i]["name"]["value"] == "type" ){
+
+          if  ( info.fieldNodes[0]["selectionSet"]["selections"][i]["name"]["value"] == "type" ){ //if they want types
+            console.log("in type")
             let urlUserType = url + "/userType"
             const type : any = await new Promise( ( resolve, reject ) => {
                 request.get({
@@ -41,29 +43,29 @@ const user = extendType( {
                 });
               });
             user.type = type.value;
-            break;
-          }
+          }// end of types
+
+          else if (info.fieldNodes[0]["selectionSet"]["selections"][i]["name"]["value"] == "Groups") { //if they want groups
+            let urlGroups = url + "/memberOf"
+
+            const groups : any = await new Promise( ( resolve, reject ) => {
+                request.get({
+                  url: urlGroups,
+                  headers: {
+                    "Authorization": "Bearer " + ctx.access_token
+                  }
+                }, function(err, response, body) {
+                  resolve(JSON.parse(body));
+                });
+              });
+              user["Groups"] = groups["value"]
+          }//end of groups
+
+
         }
           
-        //groups
-        let urlGroups = url + "/memberOf"
-        const groups : any = await new Promise( ( resolve, reject ) => {
-            request.get({
-              url: urlGroups,
-              headers: {
-                "Authorization": "Bearer " + ctx.access_token
-              }
-            }, function(err, response, body) {
-              resolve(JSON.parse(body));
-            });
-          });
-        user.groups = [{"id": "iddd"}]
-        for (let i = 0; i <  groups["value"].length; i++ ){
-          user.groups[i] = {
-            id: groups["value"][i]["id"]
-          }
-          
-        }
+
+
 
 
         return user

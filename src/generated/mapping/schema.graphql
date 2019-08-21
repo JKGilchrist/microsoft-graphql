@@ -3,6 +3,8 @@
 
 
 type Group {
+  createdDateTime: String!
+
   """Group's description."""
   description: String!
 
@@ -11,12 +13,19 @@ type Group {
 
   """Group's Microsoft Graph id."""
   id: String!
+  mail: String
+  mailNickname: String
 
   """Group's members."""
   members: [User!]!
+  visibility: String
 }
 
 type Query {
+  group(
+    """The id of the expected group"""
+    id: String!
+  ): Group
   user(
     """The id of the expected user"""
     id: String!

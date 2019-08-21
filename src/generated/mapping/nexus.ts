@@ -20,10 +20,14 @@ export interface NexusGenEnums {
 
 export interface NexusGenRootTypes {
   Group: { // root type
+    createdDateTime: string; // String!
     description: string; // String!
     displayName: string; // String!
     id: string; // String!
+    mail?: string | null; // String
+    mailNickname?: string | null; // String
     members: NexusGenRootTypes['User'][]; // [User!]!
+    visibility?: string | null; // String
   }
   Query: {};
   User: { // root type
@@ -49,12 +53,17 @@ export interface NexusGenAllTypes extends NexusGenRootTypes {
 
 export interface NexusGenFieldTypes {
   Group: { // field return type
+    createdDateTime: string; // String!
     description: string; // String!
     displayName: string; // String!
     id: string; // String!
+    mail: string | null; // String
+    mailNickname: string | null; // String
     members: NexusGenRootTypes['User'][]; // [User!]!
+    visibility: string | null; // String
   }
   Query: { // field return type
+    group: NexusGenRootTypes['Group'] | null; // Group
     user: NexusGenRootTypes['User'] | null; // User
     users: NexusGenRootTypes['User'][]; // [User!]!
   }
@@ -73,6 +82,9 @@ export interface NexusGenFieldTypes {
 
 export interface NexusGenArgTypes {
   Query: {
+    group: { // args
+      id: string; // String!
+    }
     user: { // args
       id: string; // String!
     }
