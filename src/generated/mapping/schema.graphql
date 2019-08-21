@@ -2,24 +2,29 @@
 ### Do not make changes to this file directly
 
 
-type Auth {
-  """
-  The requested access token. Your app can use this token in calls to Microsoft Graph.
-  """
-  access_token: String!
+type Group {
+  """Group's description."""
+  description: String!
 
-  """How long the access token is valid (in seconds)."""
-  expires_in: Int!
+  """Group's display name."""
+  displayName: String!
 
-  """
-  Indicates the token type value. The only type that Azure AD supports is bearer.
-  """
-  token_type: String!
+  """Group's Microsoft Graph id."""
+  id: String!
+
+  """Group's members."""
+  members: [User!]!
 }
 
 type Query {
-  getAuth(client_id: String!, client_secret: String!): Auth!
-  users: [User!]!
+  user(
+    """The id of the expected user"""
+    id: String!
+  ): User
+  users(
+    """Filter given names to only include those beginning with a given string"""
+    givenNameStartsWith: String
+  ): [User!]!
 }
 
 type User {
@@ -28,6 +33,9 @@ type User {
 
   """User's given name."""
   givenName: String
+
+  """Groups the user is a member of"""
+  Groups: [Group!]
 
   """User's Microsoft Graph id."""
   id: String!
@@ -41,6 +49,9 @@ type User {
   """User's surname."""
   surname: String
 
-  """User's principle name."""
-  userPrincipleName: String
+  """What type the user is"""
+  type: String!
+
+  """User's principal name."""
+  userPrincipalName: String
 }

@@ -19,20 +19,23 @@ export interface NexusGenEnums {
 }
 
 export interface NexusGenRootTypes {
-  Auth: { // root type
-    access_token: string; // String!
-    expires_in: number; // Int!
-    token_type: string; // String!
+  Group: { // root type
+    description: string; // String!
+    displayName: string; // String!
+    id: string; // String!
+    members: NexusGenRootTypes['User'][]; // [User!]!
   }
   Query: {};
   User: { // root type
     displayName: string; // String!
     givenName?: string | null; // String
+    Groups?: NexusGenRootTypes['Group'][] | null; // [Group!]
     id: string; // String!
     jobTitle?: string | null; // String
     mail?: string | null; // String
     surname?: string | null; // String
-    userPrincipleName?: string | null; // String
+    type: string; // String!
+    userPrincipalName?: string | null; // String
   }
   String: string;
   Int: number;
@@ -45,31 +48,36 @@ export interface NexusGenAllTypes extends NexusGenRootTypes {
 }
 
 export interface NexusGenFieldTypes {
-  Auth: { // field return type
-    access_token: string; // String!
-    expires_in: number; // Int!
-    token_type: string; // String!
+  Group: { // field return type
+    description: string; // String!
+    displayName: string; // String!
+    id: string; // String!
+    members: NexusGenRootTypes['User'][]; // [User!]!
   }
   Query: { // field return type
-    getAuth: NexusGenRootTypes['Auth']; // Auth!
+    user: NexusGenRootTypes['User'] | null; // User
     users: NexusGenRootTypes['User'][]; // [User!]!
   }
   User: { // field return type
     displayName: string; // String!
     givenName: string | null; // String
+    Groups: NexusGenRootTypes['Group'][] | null; // [Group!]
     id: string; // String!
     jobTitle: string | null; // String
     mail: string | null; // String
     surname: string | null; // String
-    userPrincipleName: string | null; // String
+    type: string; // String!
+    userPrincipalName: string | null; // String
   }
 }
 
 export interface NexusGenArgTypes {
   Query: {
-    getAuth: { // args
-      client_id: string; // String!
-      client_secret: string; // String!
+    user: { // args
+      id: string; // String!
+    }
+    users: { // args
+      givenNameStartsWith?: string | null; // String
     }
   }
 }
@@ -79,7 +87,7 @@ export interface NexusGenAbstractResolveReturnTypes {
 
 export interface NexusGenInheritedFields {}
 
-export type NexusGenObjectNames = "Auth" | "Query" | "User";
+export type NexusGenObjectNames = "Group" | "Query" | "User";
 
 export type NexusGenInputNames = never;
 
