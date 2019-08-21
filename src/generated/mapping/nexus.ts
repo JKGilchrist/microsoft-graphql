@@ -87,7 +87,6 @@ export interface NexusGenAbstractResolveReturnTypes {
 
 export interface NexusGenInheritedFields {}
 
-export type NexusGenObjectNames = "Query" | "User";
 export type NexusGenObjectNames = "Group" | "Query" | "User";
 
 export type NexusGenInputNames = never;
