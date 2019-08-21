@@ -25,7 +25,6 @@ const users = extendType( {
             if (i === 0) {
               url = url + "?" + queryOptions[i];
             } else {
-              console.log("HERE")
               url = url + "&" + queryOptions[i];
             }
           }
@@ -56,10 +55,31 @@ const users = extendType( {
           });
         });
 
-        return result;
-      },
-    })
-  }
-});
+        
+        //get each user type, if needed. Can get slow depending on how many are needed
+        for (let i = 0; i < info.fieldNodes[0]["selectionSet"]["selections"].length; i++){
+          if  ( info.fieldNodes[0]["selectionSet"]["selections"][i]["name"]["value"] == "type" ){ //only enters once
+            for (let j = 0; j < result.length; j++) {
+              let user = result[j];
+              let urlUserType = "https://graph.microsoft.com/v1.0/users/" + user.id + "/userType"
+              const type : any = await new Promise( ( resolve, reject ) => {
+                  request.get({
+                    url: urlUserType,
+                    headers: {
+                      "Authorization": "Bearer " + ctx.access_token
+                    }
+                  }, function(err, response, body) {
+                    resolve(JSON.parse(body));
+                  });
+                });
+                user["type"] = type["value"]
+            }
+            break;
+          }
+        }
+        
+    return result;
+  
+}})}});
 
 export default users;

@@ -1,7 +1,7 @@
 import { extendType, stringArg  } from "nexus";
 import * as request from 'request';
 
-const users = extendType( {
+const user = extendType( {
   type: "Query",
   definition(t) {
     t.field('user', {
@@ -14,6 +14,7 @@ const users = extendType( {
 
         let url = "https://graph.microsoft.com/v1.0/users/" + args.id + ""
 
+        //General fields
         let user : any = await new Promise( ( resolve, reject ) => {
           request.get({
             url: url,
@@ -25,21 +26,26 @@ const users = extendType( {
           });
         });
 
-        //add userType
-        let urlUserType = url + "/userType"
-        const type : any = await new Promise( ( resolve, reject ) => {
-            request.get({
-              url: urlUserType,
-              headers: {
-                "Authorization": "Bearer " + ctx.access_token
-              }
-            }, function(err, response, body) {
-              resolve(JSON.parse(body));
-            });
-          });
-        user.type = type.value
+        //get user type, if needed
+        for (let i = 0; i < info.fieldNodes[0]["selectionSet"]["selections"].length; i++){
+          if  ( info.fieldNodes[0]["selectionSet"]["selections"][i]["name"]["value"] == "type" ){
+            let urlUserType = url + "/userType"
+            const type : any = await new Promise( ( resolve, reject ) => {
+                request.get({
+                  url: urlUserType,
+                  headers: {
+                    "Authorization": "Bearer " + ctx.access_token
+                  }
+                }, function(err, response, body) {
+                  resolve(JSON.parse(body));
+                });
+              });
+            user.type = type.value;
+            break;
+          }
+        }
           
-
+        //groups
         let urlGroups = url + "/memberOf"
         const groups : any = await new Promise( ( resolve, reject ) => {
             request.get({
@@ -56,15 +62,10 @@ const users = extendType( {
           user.groups[i] = {
             id: groups["value"][i]["id"]
           }
-          //user.groups.push(
-          console.log(groups["value"][i]);
+          
         }
 
 
-        //Needs to add type to each
-          //console.log(user)
-        //console.log(user)
-        console.log(user)
         return user
         
       },
@@ -72,4 +73,4 @@ const users = extendType( {
   }
 });
 
-export default users;
+export default user;
