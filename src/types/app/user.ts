@@ -1,4 +1,5 @@
 import { objectType } from "nexus";
+import Group from "./group";
 
 const User = objectType({
   name: 'User',
@@ -7,9 +8,12 @@ const User = objectType({
     t.string("displayName", { description: "User's display name.", nullable: false });
     t.string("givenName", { description: "User's given name.", nullable: true });
     t.string("surname", { description: "User's surname.", nullable: true });
-    t.string("userPrincipleName", { description: "User's principle name.", nullable: true });
+    t.string("userPrincipalName", { description: "User's principal name.", nullable: true });
     t.string("jobTitle", { description: "User's job title.", nullable: true });
     t.string("mail", { description: "User's email address.", nullable: true });
+
+    t.list.field("Groups", {type: Group, description: "Groups the user is a member of", nullable: true});
+    t.string("type", {description: "What type the user is", nullable: false})
   },
 });
 

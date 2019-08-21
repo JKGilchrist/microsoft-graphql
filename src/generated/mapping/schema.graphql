@@ -4,6 +4,29 @@
 
 type Query {
   users(givenNameStartsWith: String): [User!]!
+type Group {
+  """Group's description."""
+  description: String!
+
+  """Group's display name."""
+  displayName: String!
+
+  """Group's Microsoft Graph id."""
+  id: String!
+
+  """Group's members."""
+  members: [User!]!
+}
+
+type Query {
+  user(
+    """The id of the expected user"""
+    id: String!
+  ): User
+  users(
+    """Filter given names to only include those beginning with a given string"""
+    givenNameStartsWith: String
+  ): [User!]!
 }
 
 type User {
@@ -12,6 +35,9 @@ type User {
 
   """User's given name."""
   givenName: String
+
+  """Groups the user is a member of"""
+  Groups: [Group!]
 
   """User's Microsoft Graph id."""
   id: String!
@@ -25,6 +51,9 @@ type User {
   """User's surname."""
   surname: String
 
-  """User's principle name."""
-  userPrincipleName: String
+  """What type the user is"""
+  type: String!
+
+  """User's principal name."""
+  userPrincipalName: String
 }

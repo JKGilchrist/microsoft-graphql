@@ -1,5 +1,6 @@
 import { extendType, stringArg  } from "nexus";
 import * as request from 'request';
+import { findBreakingChanges } from "graphql";
 
 const users = extendType( {
   type: "Query",
@@ -7,7 +8,8 @@ const users = extendType( {
     t.list.field('users', {
       type: 'User',
       args: {
-        givenNameStartsWith: stringArg({required: false})
+        givenNameStartsWith: stringArg({required: false, description: "Filter given names to only include those beginning with a given string"}),
+        
       },
       resolve: async (parent, args, ctx, info) => {
 
@@ -23,6 +25,7 @@ const users = extendType( {
             if (i === 0) {
               url = url + "?" + queryOptions[i];
             } else {
+              console.log("HERE")
               url = url + "&" + queryOptions[i];
             }
           }
@@ -47,7 +50,7 @@ const users = extendType( {
             displayName: user.displayName,
             givenName: user.givenName,
             surname: user.surname,
-            userPrincipleName: user.userPrincipleName,
+            userPrincipalName: user.userPrincipalName,
             jobTitle: user.jobTitle,
             mail: user.mail,
           });
