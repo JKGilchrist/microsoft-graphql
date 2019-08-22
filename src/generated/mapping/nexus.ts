@@ -46,7 +46,7 @@ export interface NexusGenRootTypes {
   User: { // root type
     displayName: string; // String!
     givenName?: string | null; // String
-    Groups?: NexusGenRootTypes['Group'][] | null; // [Group!]
+    groups?: NexusGenRootTypes['Group'][] | null; // [Group!]
     id: string; // String!
     jobTitle?: string | null; // String
     mail?: string | null; // String
@@ -83,13 +83,14 @@ export interface NexusGenFieldTypes {
   }
   Query: { // field return type
     group: NexusGenRootTypes['Group'] | null; // Group
+    groups: NexusGenRootTypes['Group'][]; // [Group!]!
     user: NexusGenRootTypes['User'] | null; // User
     users: NexusGenRootTypes['User'][]; // [User!]!
   }
   User: { // field return type
     displayName: string; // String!
     givenName: string | null; // String
-    Groups: NexusGenRootTypes['Group'][] | null; // [Group!]
+    groups: NexusGenRootTypes['Group'][] | null; // [Group!]
     id: string; // String!
     jobTitle: string | null; // String
     mail: string | null; // String
@@ -100,6 +101,11 @@ export interface NexusGenFieldTypes {
 }
 
 export interface NexusGenArgTypes {
+  Group: {
+    members: { // args
+      orderBy?: NexusGenInputs['orderBy'] | null; // orderBy
+    }
+  }
   Query: {
     group: { // args
       id: string; // String!
