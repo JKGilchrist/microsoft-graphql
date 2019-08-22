@@ -20,7 +20,41 @@ async function groupsResolver(args : any, fields : Array<ScalarField>, ctx : any
 
   let url = "https://graph.microsoft.com/v1.0/groups/";
 
-  // YOUR QUERYING LOGIC HERE
+  // QUERYING LOGIC
+  const queryOptions = []; //Stores all eventual query parameters
+
+  args.forEach(arg => { //foreach arg, create what it tacks on to the URL
+    if (arg === "filterData"){ //cannot use name filter 
+      if (args.filter.type == "startsWith"){
+        queryOptions.push("$filter=" + args.filter.type +"("+ args.filter.field + ",'" + args.filter.value + "')");
+      }
+      else {          
+        queryOptions.push("$filter=" + args.filter.field + " " + args.filter.type + " '" + args.filter.value + "'");
+      }
+    }
+
+    if (arg === "orderby"){
+      queryOptions.push("$orderby=" + args.orderBy.field + "%20" + args.orderBy.orderStyle);
+    }
+  });
+  
+  //create select parameter
+  let select = "$select=";
+  for (let i = 0; i < fields.length; i++){
+    select = select + fields[i]["value"] + "," ;
+  }
+  queryOptions.push(select);
+
+  //build url
+  for (let i = 0; i < queryOptions.length; i++) {
+    if (i === 0) {
+      url = url + "?" + queryOptions[i];
+    } else {
+      url = url + "&" + queryOptions[i];
+    }
+  }
+
+  console.log(url)
 
   let groupReq : any = await new Promise( ( resolve, reject ) => {
     request.get({
@@ -36,14 +70,23 @@ async function groupsResolver(args : any, fields : Array<ScalarField>, ctx : any
     });
   });
 
+  //is this all necessary? Return groupReq
+  //currently doesn't work either way
   let groupData : Array<GroupData> = [];
-
+  //console.log(groupReq)
   for (let i = 0 ; i < groupReq.length; i++) {
     groupData.push({
       id: groupReq[i].id,
-      // etc...
+      createdDateTime: groupReq[i].createdDateTime, 
+      description: groupReq[i].description, 
+      displayName: groupReq[i].displayName, 
+      mail: groupReq[i].mail, 
+      mailNickname: groupReq[i].mailNickname, 
+      visibility: groupReq[i].visibility, 
     });
   }
+
+  //console.log(groupData)
 
   return groupData;
 }

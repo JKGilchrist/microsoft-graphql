@@ -136,6 +136,7 @@ const users = extendType( {
             }
           }//end of type
 
+    console.log(result)
     return result;
   
   },})}});

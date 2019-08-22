@@ -70,7 +70,7 @@ async function deployWorkers(node : Node, ctx) {
     data[node.value][complexField.value] = complexField.data[complexField.value];
   });
 
-  return data;
+  return data["groups"]; //TODO - this will always be called groups, yeah?
 } 
 
 const groups = extendType({
@@ -79,7 +79,6 @@ const groups = extendType({
     t.list.field('groups', {
       type: 'Group',
       resolve: async (parent, args, ctx, info) => {
-        
         // There is a chance that the root args will have to be specially formatted to match the field args structure for now we are ignoring them
         let _args;
         if (Object.keys(args).length > 0) {
@@ -94,12 +93,10 @@ const groups = extendType({
           args: parseArgs(_args),
           fields: parseFields(info)
         }
-
+        console.log("root", root)
         let data = await deployWorkers(root, ctx); 
 
-        console.log(data);
-
-        return data;
+        return data; //may be TEMP
       }
     });
   } 
