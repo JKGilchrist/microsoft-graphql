@@ -1,7 +1,7 @@
 import { extendType, stringArg, arg, inputObjectType } from "nexus";
 import * as request from 'request';
-//import filterer from "./filterInputObjectType"; //TODO broken
-import orderby from "./orderbyInputObjectType";
+import filter from "./argTypes/filterInputObjectType"; 
+import orderBy from "./argTypes/orderbyInputObjectType";
 
 const users = extendType( {
   type: "Query",
@@ -9,18 +9,42 @@ const users = extendType( {
     t.list.field('users', {
       type: 'User',
       args: {
-        //filter: arg({ type: filterer, required: false, description: "Specify which field and by what value that field should start with, case insensitive"}),
-        orderBy: arg({type: orderby, required: false, description: ""}),
-        
+        filter: arg({ type: filter, required: false, description: "Specify which field and by what value that field should start with, case insensitive"}),
+        orderBy: arg({type: orderBy, required: false, description: ""}),
+        //can only filter or order, not both
+        //count doesnt work
+
+        /*
+        All parameters
+        count - doesn't work
+        expand
+        filter - can't be combined with orderby
+        format
+        orderby - can't be combined with filter
+        search
+        select
+        skip
+        skiptoken
+        top parameter
+        */
       },
       resolve: async (parent, args, ctx, info) => {
 
         let url = "https://graph.microsoft.com/v1.0/users";
         const queryOptions = [];
         
-        //if (args.filter){
-        //  queryOptions.push("$filter=startswith("+ args.filter.field + ",'" + args.filter.startsWith + "')");
-        //}
+        if (args.filter){
+          if (args.filter.type == "startsWith"){
+            queryOptions.push("$filter=" + args.filter.type +"("+ args.filter.field + ",'" + args.filter.value + "')");
+          }
+          else {          
+            queryOptions.push("$filter=" + args.filter.field + " " + args.filter.type + " '" + args.filter.value + "'");
+          }
+        }
+        
+        if (args.orderBy){
+          queryOptions.push("$orderby=" + args.orderBy.field + "%20" + args.orderBy.orderStyle);
+        }
         
         let getType = false; //used later to determine if needed to get type for each user
         let getGroup = false; //used later to determine if needed to get group for each user
@@ -36,6 +60,7 @@ const users = extendType( {
         queryOptions.push(select);
 
         //build url
+        console.log(queryOptions)
         for (let i = 0; i < queryOptions.length; i++) {
           if (i === 0) {
             url = url + "?" + queryOptions[i];
@@ -59,6 +84,7 @@ const users = extendType( {
 
         
         const result = [];
+        console.log(users)
         users.value.map((user) => {
           result.push({
             id: user.id,

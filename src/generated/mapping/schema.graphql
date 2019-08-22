@@ -3,11 +3,14 @@
 
 
 input filter {
-  """Ascending or descending order, the former is the default"""
-  Ascending: Boolean
+  """The field to filter by"""
+  field: userFilterFieldType!
 
-  """The field(s?TODO) to order by"""
-  field: String!
+  """the filtering method to be used"""
+  type: type!
+
+  """The value to compare to"""
+  value: String!
 }
 
 type Group {
@@ -29,6 +32,19 @@ type Group {
   visibility: String
 }
 
+enum order {
+  ASCENDING
+  DESCENDING
+}
+
+input orderBy {
+  """The field(s?TODO) to order by"""
+  field: userOrderFieldType!
+
+  """Ascending or descending order, the former is the default"""
+  orderStyle: order
+}
+
 type Query {
   group(
     """The id of the expected group"""
@@ -38,7 +54,23 @@ type Query {
     """The id of the expected user"""
     id: String!
   ): User
-  users(orderBy: filter): [User!]!
+  users(
+    """
+    Specify which field and by what value that field should start with, case insensitive
+    """
+    filter: filter
+    orderBy: orderBy
+  ): [User!]!
+}
+
+enum type {
+  EQUAL
+  GREATER_THAN
+  GREATER_THAN_OR_EQUAL
+  LESS_THAN
+  LESS_THAN_OR_EQUAL
+  NOT_EQUAL
+  STARTS_WITH
 }
 
 type User {
@@ -68,4 +100,18 @@ type User {
 
   """User's principal name."""
   userPrincipalName: String
+}
+
+enum userFilterFieldType {
+  displayName
+  givenName
+  jobTitle
+  mail
+  surName
+  userPrincipalName
+}
+
+enum userOrderFieldType {
+  displayName
+  userPrincipalName
 }
