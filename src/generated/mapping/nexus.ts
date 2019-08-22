@@ -13,6 +13,10 @@ declare global {
 }
 
 export interface NexusGenInputs {
+  filter: { // input type
+    Ascending?: boolean | null; // Boolean
+    field: string; // String!
+  }
 }
 
 export interface NexusGenEnums {
@@ -49,6 +53,7 @@ export interface NexusGenRootTypes {
 }
 
 export interface NexusGenAllTypes extends NexusGenRootTypes {
+  filter: NexusGenInputs['filter'];
 }
 
 export interface NexusGenFieldTypes {
@@ -89,7 +94,7 @@ export interface NexusGenArgTypes {
       id: string; // String!
     }
     users: { // args
-      givenNameStartsWith?: string | null; // String
+      orderBy?: NexusGenInputs['filter'] | null; // filter
     }
   }
 }
@@ -101,7 +106,7 @@ export interface NexusGenInheritedFields {}
 
 export type NexusGenObjectNames = "Group" | "Query" | "User";
 
-export type NexusGenInputNames = never;
+export type NexusGenInputNames = "filter";
 
 export type NexusGenEnumNames = never;
 

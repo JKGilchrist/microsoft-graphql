@@ -12,8 +12,15 @@ const group = extendType( {
       },
       resolve: async (parent, args, ctx, info) => {
 
-        let url = "https://graph.microsoft.com/v1.0/groups/" + args.id + ""
+        let url = "https://graph.microsoft.com/v1.0/groups/" + args.id;
 
+        
+        for (let i = 0; i < info.fieldNodes[0]["selectionSet"]["selections"].length; i++){
+            if (info.fieldNodes[0]["selectionSet"]["selections"][i]["name"]["value"] == "members"){
+                url = url + "?$expand=members";
+                break;
+            }
+        }
         //General fields
         let group : any = await new Promise( ( resolve, reject ) => {
           request.get({
