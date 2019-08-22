@@ -1,6 +1,6 @@
 import { objectType, arg } from "nexus";
 import User from "./user";
-import orderBy from "../filters/orderByInputObjectType";
+import orderBy from "../filters/orderbyInputObjectType";
 
 const Group = objectType({
   name: 'Group',

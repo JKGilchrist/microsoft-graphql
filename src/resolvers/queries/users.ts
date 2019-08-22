@@ -1,7 +1,7 @@
 import { extendType, stringArg, arg, inputObjectType } from "nexus";
 import * as request from 'request';
-import filter from "./argTypes/filterInputObjectType"; 
-import orderBy from "./argTypes/orderbyInputObjectType";
+import filter from "../../types/filters/filterInputObjectType"; 
+import orderBy from "../../types/filters/orderbyInputObjectType";
 
 const users = extendType( {
   type: "Query",
