@@ -4,7 +4,7 @@
 
 input filter {
   """Ascending or descending order, the former is the default"""
-  Ascending: Boolean
+  ascending: Boolean
 
   """The field(s?TODO) to order by"""
   field: String!
@@ -25,8 +25,16 @@ type Group {
   mailNickname: String
 
   """Group's members."""
-  members: [User!]!
+  members(orderBy: orderBy): [User!]!
   visibility: String
+}
+
+input orderBy {
+  """Ascending or descending order, the former is the default"""
+  ascending: Boolean
+
+  """The field(s?TODO) to order by"""
+  field: String!
 }
 
 type Query {
@@ -34,6 +42,7 @@ type Query {
     """The id of the expected group"""
     id: String!
   ): Group
+  groups: [Group!]!
   user(
     """The id of the expected user"""
     id: String!
@@ -49,7 +58,7 @@ type User {
   givenName: String
 
   """Groups the user is a member of"""
-  Groups: [Group!]
+  groups: [Group!]
 
   """User's Microsoft Graph id."""
   id: String!

@@ -11,8 +11,11 @@ const User = objectType({
     t.string("userPrincipalName", { description: "User's principal name.", nullable: true });
     t.string("jobTitle", { description: "User's job title.", nullable: true });
     t.string("mail", { description: "User's email address.", nullable: true });
-
-    t.list.field("Groups", {type: Group, description: "Groups the user is a member of", nullable: true});
+    t.list.field("groups", {
+      type: Group,
+      description: "Groups the user is a member of", 
+      nullable: true
+    });
     t.string("type", {description: "What type the user is", nullable: false})
   },
 });

@@ -1,5 +1,6 @@
-import { objectType } from "nexus";
+import { objectType, arg } from "nexus";
 import User from "./user";
+import orderBy from "../filters/orderByInputObjectType";
 
 const Group = objectType({
   name: 'Group',
@@ -12,7 +13,14 @@ const Group = objectType({
     t.string("mailNickname", {nullable:true, });
     t.string("visibility", {nullable: true}); //Some like for company administrator and appplication developer are null
 
-    t.list.field("members", { type: User, description: "Group's members.", nullable: false });
+    t.list.field("members", { 
+      type: User, 
+      args: {
+        orderBy: arg({type: orderBy, required: false, description: ""}),
+      },
+      description: "Group's members.", 
+      nullable: false 
+    });
   },
 });
 
