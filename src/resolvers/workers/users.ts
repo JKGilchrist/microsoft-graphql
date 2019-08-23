@@ -17,7 +17,7 @@ interface UserData {
 
 async function usersResolver(args : any, fields : Array<ScalarField>, ctx : any) : Promise<Array<UserData>>  {
   
-  console.log("USERS ", args, fields)
+  console.log("USERS ", args, fields);
   
   let url = "https://graph.microsoft.com/v1.0/users/";
   const queryOptions = [];
