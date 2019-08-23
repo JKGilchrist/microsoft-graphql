@@ -116,6 +116,7 @@ export interface NexusGenArgTypes {
     users: { // args
       filter?: NexusGenInputs['filter'] | null; // filter
       orderBy?: NexusGenInputs['orderBy'] | null; // orderBy
+      top?: number | null; // Int
     }
   }
 }

@@ -73,13 +73,14 @@ async function deployWorkers(node : Node, ctx) {
   return data["groups"]; //TODO - this will always be called groups, yeah?
 } 
 
+
 const groups = extendType({
   type: "Query",
   definition(t) {
     t.list.field('groups', {
       type: 'Group',
       resolve: async (parent, args, ctx, info) => {
-        // There is a chance that the root args will have to be specially formatted to match the field args structure for now we are ignoring them
+        // There is a chance that the root args will have to be specially formatted to match the field args structure, but for now we are ignoring them
         let _args;
         if (Object.keys(args).length > 0) {
           _args = [];
@@ -96,7 +97,7 @@ const groups = extendType({
         console.log("root", root)
         let data = await deployWorkers(root, ctx); 
 
-        return data; //may be TEMP
+        return data;
       }
     });
   } 

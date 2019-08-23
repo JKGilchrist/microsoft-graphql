@@ -57,7 +57,6 @@ function parseSelectionSet(selectionSet : SelectionSet) : Array<ScalarField | Co
   let fields : Array<ScalarField | ComplexField> = [];
 
   selectionSet.selections.map((field : Field) => {
-
     //console.log(field);
     if (field.selectionSet) {
       let complexField : ComplexField = {

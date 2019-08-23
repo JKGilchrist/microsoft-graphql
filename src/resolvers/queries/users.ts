@@ -1,4 +1,4 @@
-import { extendType, stringArg, arg, inputObjectType } from "nexus";
+import { extendType, stringArg, arg, inputObjectType, intArg } from "nexus";
 import * as request from 'request';
 import filter from "../../types/filters/filterInputObjectType"; 
 import orderBy from "../../types/filters/orderbyInputObjectType";
@@ -11,26 +11,25 @@ const users = extendType( {
       args: {
         filter: arg({ type: filter, required: false, description: "Specify which field and by what value that field should start with, case insensitive"}),
         orderBy: arg({type: orderBy, required: false, description: ""}),
+        top: intArg({required: false, description: "The maximum number of results expected"}),
         //can only filter or order, not both
-        //count doesnt work
 
         /*
         All parameters
         count - doesn't work
-        expand
+        expand - works on some? (can expand users/memberOf (when in beta), can't expand users/userType, can expand users/joinedTeams [when in beta?]. Has limit of 20 results )
         filter - can't be combined with orderby
-        format
+        format - not really relevant to us
         orderby - can't be combined with filter
-        search
-        select
-        skip
-        skiptoken
-        top parameter
+        search - Doesn't seem to work
+        select - seems to break expand
+        skip - used for paging, not relevant right now
+        skiptoken - ^
+        top parameter - useful
         */
       },
       resolve: async (parent, args, ctx, info) => {
-
-        let url = "https://graph.microsoft.com/v1.0/users";
+        let url = "https://graph.microsoft.com/beta/users";
         const queryOptions = [];
         
         if (args.filter){
@@ -45,22 +44,29 @@ const users = extendType( {
         if (args.orderBy){
           queryOptions.push("$orderby=" + args.orderBy.field + "%20" + args.orderBy.orderStyle);
         }
+        if (args.top){
+          queryOptions.push("$top=" + args.top);
+        }
         
         let getType = false; //used later to determine if needed to get type for each user
-        let getGroup = false; //used later to determine if needed to get group for each user
 
-        let select = "$select=" ;
-
+        //let select = "$select=" ;
+        //console.log("info", info.fieldNodes[0]["selectionSet"]["selections"])
         for (let i = 0; i < info.fieldNodes[0]["selectionSet"]["selections"].length; i++){
-          select = select + info.fieldNodes[0]["selectionSet"]["selections"][i]["name"]["value"] + "," ;
-
-          if (info.fieldNodes[0]["selectionSet"]["selections"][i]["name"]["value"] == "type" ) getType = true;
-          else if (info.fieldNodes[0]["selectionSet"]["selections"][i]["name"]["value"] == "Group" ) getGroup = true;
+          //if (info.fieldNodes[0]["selectionSet"]["selections"][i]["name"]["value"] != "groups"){
+          //select = select + info.fieldNodes[0]["selectionSet"]["selections"][i]["name"]["value"] + "," ;
+        //}
+          if (info.fieldNodes[0]["selectionSet"]["selections"][i]["name"]["value"] == "type" ) {
+            getType = true
+          }
+          else if (info.fieldNodes[0]["selectionSet"]["selections"][i]["name"]["value"] == "groups" ) { //new get group, although doesn't play well with select
+            queryOptions.push("$expand=memberOf")
+          }
         }
-        queryOptions.push(select);
+        //queryOptions.push(select);
 
         //build url
-        console.log(queryOptions)
+        //console.log(queryOptions)
         for (let i = 0; i < queryOptions.length; i++) {
           if (i === 0) {
             url = url + "?" + queryOptions[i];
@@ -81,10 +87,14 @@ const users = extendType( {
             resolve(JSON.parse(body));
           });
         });
+        console.log(users);
 
+        users["value"].forEach(user => {
+          console.log("H")
+          console.log(user.memberOf)
+        });
         
         const result = [];
-        console.log(users)
         users.value.map((user) => {
           result.push({
             id: user.id,
@@ -94,15 +104,17 @@ const users = extendType( {
             userPrincipalName: user.userPrincipalName,
             jobTitle: user.jobTitle,
             mail: user.mail,
+            groups: user.memberOf
           });
         });
 
         //if individual calls are needed
-        if  ( getType || getGroup ){
+        if  ( getType ){
             for (let j = 0; j < result.length; j++) {
               let user = result[j];
 
-              if (getType){ //If asked for type of each user
+              if (getType){ //If asked for type of each user, only enters this statment once
+              //should swap to batch
               let urlUserType = "https://graph.microsoft.com/v1.0/users/" + user.id + "/userType";
               const type : any = await new Promise( ( resolve, reject ) => {
                 request.get({
@@ -118,25 +130,10 @@ const users = extendType( {
               user["type"] = type["value"];
             }
 
-              if (getGroup){
-                let urlGroups = "https://graph.microsoft.com/v1.0/users/" + user.id + "/memberOf" ;
-                const groups : any = await new Promise( ( resolve, reject ) => {
-                  request.get({
-                    url: urlGroups,
-                    headers: {
-                      "Authorization": "Bearer " + ctx.access_token
-                    }
-                  }, function(err, response, body) {
-                    resolve(JSON.parse(body));
-                  });
-                });
-                
-                  user["Groups"] = groups["value"];
-              }
             }
           }//end of type
 
-    console.log(result)
+    //console.log(result)
     return result;
   
   },})}});
