@@ -2,17 +2,6 @@
 ### Do not make changes to this file directly
 
 
-input filter {
-  """The field to filter by"""
-  field: userFilterFieldType!
-
-  """the filtering method to be used"""
-  type: type!
-
-  """The value to compare to"""
-  value: String!
-}
-
 type Group {
   createdDateTime: String!
 
@@ -58,26 +47,7 @@ type Query {
     """The id of the expected user"""
     id: String!
   ): User
-  users(
-    """
-    Specify which field and by what value that field should start with, case insensitive
-    """
-    filter: filter
-    orderBy: orderBy
-
-    """The maximum number of results expected"""
-    top: Int
-  ): [User!]!
-}
-
-enum type {
-  EQUAL
-  GREATER_THAN
-  GREATER_THAN_OR_EQUAL
-  LESS_THAN
-  LESS_THAN_OR_EQUAL
-  NOT_EQUAL
-  STARTS_WITH
+  users: [User!]!
 }
 
 type User {
@@ -107,15 +77,6 @@ type User {
 
   """User's principal name."""
   userPrincipalName: String
-}
-
-enum userFilterFieldType {
-  displayName
-  givenName
-  jobTitle
-  mail
-  surName
-  userPrincipalName
 }
 
 enum userOrderFieldType {

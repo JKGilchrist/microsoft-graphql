@@ -16,7 +16,7 @@ interface GroupData {
 
 async function groupsResolver(args : any, fields : Array<ScalarField>, ctx : any) : Promise<Array<GroupData>>  {
 
-  console.log("GROUPS ", args, fields);
+  //console.log("GROUPS ", args, fields);
 
   let url = "https://graph.microsoft.com/v1.0/groups/";
 
@@ -54,7 +54,7 @@ async function groupsResolver(args : any, fields : Array<ScalarField>, ctx : any
     }
   }
 
-  console.log(url)
+  //console.log(url);
 
   let groupReq : any = await new Promise( ( resolve, reject ) => {
     request.get({
@@ -73,11 +73,10 @@ async function groupsResolver(args : any, fields : Array<ScalarField>, ctx : any
   //is this all necessary? Return groupReq
   //currently doesn't work either way
   let groupData : Array<GroupData> = [];
-  //console.log(groupReq)
   for (let i = 0 ; i < groupReq.length; i++) {
     groupData.push({
       id: groupReq[i].id,
-      createdDateTime: groupReq[i].createdDateTime, 
+      createdDateTime: groupReq[i].createdDateTime,
       description: groupReq[i].description, 
       displayName: groupReq[i].displayName, 
       mail: groupReq[i].mail, 
@@ -86,7 +85,6 @@ async function groupsResolver(args : any, fields : Array<ScalarField>, ctx : any
     });
   }
 
-  //console.log(groupData)
 
   return groupData;
 }

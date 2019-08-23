@@ -1,4 +1,4 @@
-import { extendType, stringArg, intArg  } from "nexus";
+import { extendType  } from "nexus";
 
 import {
   ScalarArg,
@@ -12,17 +12,10 @@ import {
   parseArgs
 } from "../helpers/parseArgs";
 
-import {
-  groupsResolver
-} from "../workers/groups";
+import deployWorkers from "../helpers/deployWorkers";
 
 import {
-  usersResolver
-} from "../workers/users";
-
-import {
-  TypesEnum,
-  typeResolver
+  TypesEnum
 } from "../helpers/typeResolver";
 
 interface Node {
@@ -31,48 +24,6 @@ interface Node {
   args: Array<ScalarArg | ComplexArg>;
   fields: Array<ScalarField | ComplexField>
 }
-
-async function deployWorkers(node : Node, ctx) {
-  let data = {};
-  let scalarFields : Array<ScalarField> = [];
-  let complexFields = [];
-
-  let fields : any = node.fields;
-  for (let i = 0; i < fields.length; i++) {
-    if (fields[i].type == "complex") {
-      let fieldNode : Node = {
-        value: fields[i].value,
-        type: typeResolver(node.type, fields[i]),
-        args: fields[i].args,
-        fields: fields[i].fields
-      }
-      complexFields.push({
-        value: fields[i].value,
-        data: await deployWorkers(fieldNode, ctx)
-      })
-
-    } else {
-      scalarFields.push(fields[i]);
-    }
-  }
-  
-  let scalarData;
-  if (node.type === TypesEnum.GROUP) {
-    scalarData = await groupsResolver(node.args, scalarFields, ctx);
-  }
-  else if (node.type === TypesEnum.USER) {
-    scalarData = await usersResolver(node.args, scalarFields, ctx);
-  }
-  
-  data[node.value] = scalarData;
-
-  complexFields.map((complexField) => {
-    data[node.value][complexField.value] = complexField.data[complexField.value];
-  });
-
-  return data["groups"]; //TODO - this will always be called groups, yeah?
-} 
-
 
 const groups = extendType({
   type: "Query",
@@ -97,7 +48,7 @@ const groups = extendType({
           args: parseArgs(_args),
           fields: parseFields(info)
         }
-        console.log("root", root)
+        
         let data = await deployWorkers(root, ctx); 
 
         return data;
