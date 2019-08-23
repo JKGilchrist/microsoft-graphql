@@ -30,7 +30,6 @@ const user = extendType( {
         for (let i = 0; i < info.fieldNodes[0]["selectionSet"]["selections"].length; i++){
 
           if  ( info.fieldNodes[0]["selectionSet"]["selections"][i]["name"]["value"] == "type" ){ //if they want types
-            console.log("in type")
             let urlUserType = url + "/userType"
             const type : any = await new Promise( ( resolve, reject ) => {
                 request.get({

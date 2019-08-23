@@ -13,6 +13,11 @@ declare global {
 }
 
 export interface NexusGenInputs {
+  filter: { // input type
+    field: NexusGenEnums['userFilterFieldType']; // userFilterFieldType!
+    type: NexusGenEnums['type']; // type!
+    value: string; // String!
+  }
   orderBy: { // input type
     field: NexusGenEnums['userOrderFieldType']; // userOrderFieldType!
     orderStyle?: NexusGenEnums['order'] | null; // order
@@ -21,6 +26,8 @@ export interface NexusGenInputs {
 
 export interface NexusGenEnums {
   order: "ASC" | "DESC"
+  type: "eq" | "gt" | "ge" | "lt" | "le" | "ne" | "startsWith"
+  userFilterFieldType: "displayName" | "givenName" | "jobTitle" | "mail" | "surName" | "userPrincipalName"
   userOrderFieldType: "displayName" | "userPrincipalName"
 }
 
@@ -55,8 +62,11 @@ export interface NexusGenRootTypes {
 }
 
 export interface NexusGenAllTypes extends NexusGenRootTypes {
+  filter: NexusGenInputs['filter'];
   orderBy: NexusGenInputs['orderBy'];
   order: NexusGenEnums['order'];
+  type: NexusGenEnums['type'];
+  userFilterFieldType: NexusGenEnums['userFilterFieldType'];
   userOrderFieldType: NexusGenEnums['userOrderFieldType'];
 }
 
@@ -106,6 +116,11 @@ export interface NexusGenArgTypes {
     user: { // args
       id: string; // String!
     }
+    users: { // args
+      filter?: NexusGenInputs['filter'] | null; // filter
+      orderBy?: NexusGenInputs['orderBy'] | null; // orderBy
+      top?: number | null; // Int
+    }
   }
 }
 
@@ -116,9 +131,9 @@ export interface NexusGenInheritedFields {}
 
 export type NexusGenObjectNames = "Group" | "Query" | "User";
 
-export type NexusGenInputNames = "orderBy";
+export type NexusGenInputNames = "filter" | "orderBy";
 
-export type NexusGenEnumNames = "order" | "userOrderFieldType";
+export type NexusGenEnumNames = "order" | "type" | "userFilterFieldType" | "userOrderFieldType";
 
 export type NexusGenInterfaceNames = never;
 

@@ -11,12 +11,9 @@ interface ComplexArg {
 }
 
 function parseArgs(args : any) {
-  console.log("here", args)
-
   let root : any = args;
   
   let args_out : Array<ScalarArg | ComplexArg> = parseArgsSet(root);
-
   return args_out;
 }
 
@@ -24,23 +21,31 @@ function parseArgs(args : any) {
 function parseArgsSet(args : any) : Array<ScalarArg | ComplexArg> {
   let args_out : Array<ScalarArg | ComplexArg> = [];
   args.map((arg : any) => {
+    Object.keys(arg).forEach(key => { //TODO come back to
+      if (key == "fields"){
+        //console.log("complex", arg.value);
+        let complexArg : ComplexArg = {
+          type: "complex",
+          name: key,
+          value: parseArgsSet(arg[key])
+        }
+        args_out.push(complexArg);
+      }
+      else {
+        //console.log("scalar ", arg[key]);
+        let scalarArg : ScalarArg = {
+          type: "scalar",
+          name: key,
+          value: arg[key]
+        }
+        args_out.push(scalarArg);
+      }
+    });
+    
+    
 
-    if (arg.value.fields) {
-      //console.log("complex", arg.value);
-      let complexArg : ComplexArg = {
-        type: "complex",
-        name: arg.name.value,
-        value: parseArgsSet(arg.value.fields)
-      }
-      args_out.push(complexArg);
+    if (arg.fields) {
     } else {
-      //console.log("scalar ", arg.value);
-      let scalarArg : ScalarArg = {
-        type: "scalar",
-        name: arg.name.value,
-        value: arg.value.value
-      }
-      args_out.push(scalarArg);
     }
   })
 

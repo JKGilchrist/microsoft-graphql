@@ -32,7 +32,7 @@ const groups = extendType({
       type: 'Group',
       args: {
         top: intArg({required: false, description: "The maximum number of results expected"}),
-
+        //TODO add others here
       },
       resolve: async (parent, args, ctx, info) => {
         // There is a chance that the root args will have to be specially formatted to match the field args structure, but for now we are ignoring them
@@ -41,16 +41,17 @@ const groups = extendType({
           _args = [args];
         }
 
-        console.log(_args)
         let root : Node = {
           value: "groups",
           type: TypesEnum.GROUP,
           args: parseArgs(_args),
           fields: parseFields(info)
         }
+        //console.log("root", root)
         
         let data = await deployWorkers(root, ctx); 
 
+        //console.log("data", data)
         return data;
       }
     });

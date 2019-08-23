@@ -2,6 +2,7 @@ import * as request from "request";
 import {
   ScalarField
 } from "../helpers/parseFields";
+import urlBuilder from "../helpers/urlBuilder";
 
 // Only scalar fields, complex fields are resolved by other resolvers
 interface GroupData {
@@ -18,44 +19,12 @@ async function groupsResolver(args : any, fields : Array<ScalarField>, ctx : any
 
   //console.log("GROUPS ", args, fields);
 
-  let url = "https://graph.microsoft.com/v1.0/groups/";
-
-  // QUERYING LOGIC
-  const queryOptions = []; //Stores all eventual query parameters
-
-  args.forEach(arg => { //foreach arg, create what it tacks on to the URL
-    if (arg === "filterData"){ //cannot use name filter 
-      if (args.filter.type == "startsWith"){
-        queryOptions.push("$filter=" + args.filter.type +"("+ args.filter.field + ",'" + args.filter.value + "')");
-      }
-      else {          
-        queryOptions.push("$filter=" + args.filter.field + " " + args.filter.type + " '" + args.filter.value + "'");
-      }
-    }
-
-    if (arg === "orderby"){
-      queryOptions.push("$orderby=" + args.orderBy.field + "%20" + args.orderBy.orderStyle);
-    }
-  });
+  //build URL
+  let url = urlBuilder("https://graph.microsoft.com/v1.0/groups/", args, fields);
   
-  //create select parameter
-  let select = "$select=";
-  for (let i = 0; i < fields.length; i++){
-    select = select + fields[i]["value"] + "," ;
-  }
-  queryOptions.push(select);
+  //console.log("URL ", url);
 
-  //build url
-  for (let i = 0; i < queryOptions.length; i++) {
-    if (i === 0) {
-      url = url + "?" + queryOptions[i];
-    } else {
-      url = url + "&" + queryOptions[i];
-    }
-  }
-
-  //console.log(url);
-
+  //Call it
   let groupReq : any = await new Promise( ( resolve, reject ) => {
     request.get({
       url: url,
@@ -70,23 +39,8 @@ async function groupsResolver(args : any, fields : Array<ScalarField>, ctx : any
     });
   });
 
-  //is this all necessary? Return groupReq
-  //currently doesn't work either way
-  let groupData : Array<GroupData> = [];
-  for (let i = 0 ; i < groupReq.length; i++) {
-    groupData.push({
-      id: groupReq[i].id,
-      createdDateTime: groupReq[i].createdDateTime,
-      description: groupReq[i].description, 
-      displayName: groupReq[i].displayName, 
-      mail: groupReq[i].mail, 
-      mailNickname: groupReq[i].mailNickname, 
-      visibility: groupReq[i].visibility, 
-    });
-  }
-
-
-  return groupData;
+  //return it
+  return groupReq;
 }
 
 export {

@@ -26,6 +26,7 @@ interface Node {
 }
 
 async function deployWorkers(node : Node, ctx) {
+  //console.log(node)
   let data = {};
   let scalarFields : Array<ScalarField> = [];
   let complexFields = [];
@@ -43,7 +44,6 @@ async function deployWorkers(node : Node, ctx) {
         value: fields[i].value,
         data: await deployWorkers(fieldNode, ctx)
       })
-
     } else {
       scalarFields.push(fields[i]);
     }
@@ -59,11 +59,15 @@ async function deployWorkers(node : Node, ctx) {
   
   data[node.value] = scalarData;
 
-  complexFields.map((complexField) => {
-    data[node.value][complexField.value] = complexField.data[complexField.value];
-  });
-
-  return data["groups"]; //TODO - this will always be called groups, yeah?
+  for (let i = 0; i < complexFields.length; i++){
+    if (node.type === TypesEnum.GROUP){
+      for (let j = 0; j < data["groups"].length; j++){
+        data["groups"][j]["members"] = complexFields[i]["data"]  //TODO PRIORITY generalize
+        
+      }
+    }
+  }
+  return data[Object.keys(data)[0]];
 }
 
 export default deployWorkers;
