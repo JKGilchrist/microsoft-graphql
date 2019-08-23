@@ -50,7 +50,10 @@ type Query {
     """The id of the expected group"""
     id: String!
   ): Group
-  groups: [Group!]!
+  groups(
+    """The maximum number of results expected"""
+    top: Int
+  ): [Group!]!
   user(
     """The id of the expected user"""
     id: String!

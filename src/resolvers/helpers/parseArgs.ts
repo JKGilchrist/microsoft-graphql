@@ -11,6 +11,7 @@ interface ComplexArg {
 }
 
 function parseArgs(args : any) {
+  console.log("here", args)
 
   let root : any = args;
   

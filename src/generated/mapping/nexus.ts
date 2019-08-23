@@ -110,6 +110,9 @@ export interface NexusGenArgTypes {
     group: { // args
       id: string; // String!
     }
+    groups: { // args
+      top?: number | null; // Int
+    }
     user: { // args
       id: string; // String!
     }

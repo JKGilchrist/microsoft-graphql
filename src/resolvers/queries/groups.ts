@@ -1,4 +1,4 @@
-import { extendType, stringArg  } from "nexus";
+import { extendType, stringArg, intArg  } from "nexus";
 
 import {
   ScalarArg,
@@ -79,15 +79,18 @@ const groups = extendType({
   definition(t) {
     t.list.field('groups', {
       type: 'Group',
+      args: {
+        top: intArg({required: false, description: "The maximum number of results expected"}),
+
+      },
       resolve: async (parent, args, ctx, info) => {
         // There is a chance that the root args will have to be specially formatted to match the field args structure, but for now we are ignoring them
-        let _args;
+        let _args = [];
         if (Object.keys(args).length > 0) {
-          _args = [];
-        } else {
-          _args = [];
+          _args = [args];
         }
 
+        console.log(_args)
         let root : Node = {
           value: "groups",
           type: TypesEnum.GROUP,
