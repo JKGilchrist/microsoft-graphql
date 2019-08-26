@@ -21,7 +21,7 @@ function parseArgs(args : any) {
 function parseArgsSet(args : any) : Array<ScalarArg | ComplexArg> {
   let args_out : Array<ScalarArg | ComplexArg> = [];
   args.map((arg : any) => {
-    Object.keys(arg).forEach(key => { //TODO come back to
+    Object.keys(arg).forEach(key => { 
       if (key == "fields"){
         //console.log("complex", arg.value);
         let complexArg : ComplexArg = {

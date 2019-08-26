@@ -59,14 +59,23 @@ async function deployWorkers(node : Node, ctx) {
   
   data[node.value] = scalarData;
 
-  for (let i = 0; i < complexFields.length; i++){
+
+  for (let i = 0; i < complexFields.length; i++){ //should become a recursive function, i think?
     if (node.type === TypesEnum.GROUP){
+      console.log("in groups")
       for (let j = 0; j < data["groups"].length; j++){
-        data["groups"][j]["members"] = complexFields[i]["data"]  //TODO PRIORITY generalize
-        
+        data["groups"][j]["members"] = complexFields[i]["data"]
+      }
+    }
+    
+    else if (node.type === TypesEnum.USER){
+      console.log("in users")
+      for (let j = 0; j < data[Object.keys(data)[0]].length; j++){ //not always called users, so have to do the Object.key thing
+        data[Object.keys(data)[0]][j]["groups"] = complexFields[i]["data"]
       }
     }
   }
+
   return data[Object.keys(data)[0]];
 }
 
