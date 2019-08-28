@@ -26,7 +26,11 @@ interface Node {
 }
 
 async function deployWorkers(node : Node, ctx) {
-  //console.log(node)
+
+  //console.log("\nnode:: ", node)
+
+  //TODO Node contains args that need to be implemented
+
   let data = {};
   let scalarFields : Array<ScalarField> = [];
   let complexFields = [];
@@ -49,6 +53,9 @@ async function deployWorkers(node : Node, ctx) {
     }
   }
   
+  //console.log("SF", scalarFields)
+  //console.log("CF", complexFields)
+
   let scalarData;
   if (node.type === TypesEnum.GROUP) {
     scalarData = await groupsResolver(node.args, scalarFields, ctx);
@@ -59,17 +66,16 @@ async function deployWorkers(node : Node, ctx) {
   
   data[node.value] = scalarData;
 
-
-  for (let i = 0; i < complexFields.length; i++){ //should become a recursive function, i think?
+  for (let i = 0; i < complexFields.length; i++){ 
     if (node.type === TypesEnum.GROUP){
-      console.log("in groups")
+      //console.log("in groups")
       for (let j = 0; j < data["groups"].length; j++){
         data["groups"][j]["members"] = complexFields[i]["data"]
       }
     }
     
     else if (node.type === TypesEnum.USER){
-      console.log("in users")
+      //console.log("in users")
       for (let j = 0; j < data[Object.keys(data)[0]].length; j++){ //not always called users, so have to do the Object.key thing
         data[Object.keys(data)[0]][j]["groups"] = complexFields[i]["data"]
       }

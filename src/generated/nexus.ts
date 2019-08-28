@@ -103,7 +103,9 @@ export interface NexusGenFieldTypes {
 export interface NexusGenArgTypes {
   Group: {
     members: { // args
+      filter?: NexusGenInputs['filter'] | null; // filter
       orderBy?: NexusGenInputs['orderBy'] | null; // orderBy
+      top?: number | null; // Int
     }
   }
   Query: {
@@ -111,12 +113,21 @@ export interface NexusGenArgTypes {
       id: string; // String!
     }
     groups: { // args
+      filter?: NexusGenInputs['filter'] | null; // filter
+      orderBy?: NexusGenInputs['orderBy'] | null; // orderBy
       top?: number | null; // Int
     }
     user: { // args
       id: string; // String!
     }
     users: { // args
+      filter?: NexusGenInputs['filter'] | null; // filter
+      orderBy?: NexusGenInputs['orderBy'] | null; // orderBy
+      top?: number | null; // Int
+    }
+  }
+  User: {
+    groups: { // args
       filter?: NexusGenInputs['filter'] | null; // filter
       orderBy?: NexusGenInputs['orderBy'] | null; // orderBy
       top?: number | null; // Int

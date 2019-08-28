@@ -17,12 +17,12 @@ interface GroupData {
 
 async function groupsResolver(args : any, fields : Array<ScalarField>, ctx : any) : Promise<Array<GroupData>>  {
 
-  //console.log("GROUPS ", args, fields);
+  console.log("GROUPS ", args, fields);
 
   //build URL
   let url = urlBuilder("https://graph.microsoft.com/v1.0/groups/", args, fields);
   
-  //console.log("URL ", url);
+  console.log("URL ", url);
 
   //Call it
   let groupReq : any = await new Promise( ( resolve, reject ) => {

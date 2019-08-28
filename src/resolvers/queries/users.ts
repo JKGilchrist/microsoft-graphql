@@ -33,6 +33,7 @@ const users = extendType({
     t.list.field('users', {
       type: 'User',
       args: {
+        //TODO implement
         filter: arg({ type: filter, required: false, description: "Specify which field and by what value that field should start with, case insensitive"}),
         orderBy: arg({type: orderBy, required: false, description: ""}),
         top: intArg({required: false, description: "The maximum number of results expected"}),
@@ -65,7 +66,8 @@ const users = extendType({
           args: parseArgs(_args),
           fields: parseFields(info)
         }
-        //console.log(root);
+        //console.log("root", root);
+        
         let data = await deployWorkers(root, ctx); 
         return data;
       }

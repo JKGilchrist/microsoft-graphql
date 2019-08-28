@@ -1,4 +1,4 @@
-import { extendType, intArg  } from "nexus";
+import { extendType, intArg, arg  } from "nexus";
 
 import {
   ScalarArg,
@@ -17,6 +17,8 @@ import deployWorkers from "../helpers/deployWorkers";
 import {
   TypesEnum
 } from "../helpers/typeResolver";
+import orderBy from "../../types/filters/orderbyInputObjectType";
+import filter from "../../types/filters/filterInputObjectType";
 
 interface Node {
   value: string;
@@ -31,8 +33,11 @@ const groups = extendType({
     t.list.field('groups', {
       type: 'Group',
       args: {
+        //TODO implement
+        filter: arg({type: filter, required: false, description: "" }),
+        orderBy: arg({type: orderBy, required: false, description: ""}),
         top: intArg({required: false, description: "The maximum number of results expected"}),
-        //TODO add others here
+        
       },
       resolve: async (parent, args, ctx, info) => {
         // There is a chance that the root args will have to be specially formatted to match the field args structure, but for now we are ignoring them
@@ -48,7 +53,6 @@ const groups = extendType({
           fields: parseFields(info)
         }
         //console.log("root", root)
-        
         let data = await deployWorkers(root, ctx); 
 
         //console.log("data", data)

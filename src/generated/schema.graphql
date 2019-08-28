@@ -24,11 +24,19 @@ type Group {
 
   """Group's Microsoft Graph id."""
   id: String!
+
+  """Group's email."""
   mail: String
   mailNickname: String
 
   """Group's members."""
-  members(orderBy: orderBy): [User!]!
+  members(
+    filter: filter
+    orderBy: orderBy
+
+    """The maximum number of results expected"""
+    top: Int
+  ): [User!]!
   visibility: String
 }
 
@@ -51,6 +59,9 @@ type Query {
     id: String!
   ): Group
   groups(
+    filter: filter
+    orderBy: orderBy
+
     """The maximum number of results expected"""
     top: Int
   ): [Group!]!
@@ -88,7 +99,13 @@ type User {
   givenName: String
 
   """Groups the user is a member of"""
-  groups: [Group!]
+  groups(
+    filter: filter
+    orderBy: orderBy
+
+    """The maximum number of results expected"""
+    top: Int
+  ): [Group!]
 
   """User's Microsoft Graph id."""
   id: String!

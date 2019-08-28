@@ -1,5 +1,7 @@
-import { objectType } from "nexus";
+import { objectType, arg, intArg } from "nexus";
 import Group from "./group";
+import orderBy from "../filters/orderbyInputObjectType";
+import filter from "../filters/filterInputObjectType";
 
 const User = objectType({
   name: 'User',
@@ -13,6 +15,11 @@ const User = objectType({
     t.string("mail", { description: "User's email address.", nullable: true });
     t.list.field("groups", {
       type: Group,
+      args: {
+        filter: arg({type: filter, required: false, description: "" }),
+        orderBy: arg({type: orderBy, required: false, description: ""}),
+        top: intArg({required: false, description: "The maximum number of results expected"}),
+      },
       description: "Groups the user is a member of", 
       nullable: true
     });

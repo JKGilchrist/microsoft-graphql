@@ -1,28 +1,29 @@
 import {
     ScalarField
   } from "./parseFields";
-import { url } from "inspector";
 
 function urlBuilder(url : string, args : any, fields : Array<ScalarField>) : string  {
+    
+    //TODO keep going on this
 
-    
     const queryOptions = []; //Stores all eventual query parameters
-    
+    console.log (args)
     args.forEach(arg => { //foreach arg, create what it tacks on to the URL
         
-        if (arg.name === "filter"){ //cannot use name filter 
+        if (arg.name === "filter"){
             arg = arg["value"];
             if (arg.type == "startsWith"){
                 queryOptions.push("$filter=" + arg.type +"("+ arg.field + ",'" + arg.value + "')");
             }
-            else {          
+            else {
                 queryOptions.push("$filter=" + arg.field + " " + arg.type + " '" + arg.value + "'");
-            }   
+            }
         }
 
         if (arg.name === "orderBy"){
         arg = arg["value"];
-        queryOptions.push("$orderby=" + arg.field + "%20" + arg.orderStyle);
+        console.log(arg)
+        queryOptions.push("$orderby=" + arg[0].value + "%20" + arg[1].value);
         }
 
         if (arg.name === "top"){
